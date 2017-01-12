@@ -1,0 +1,1983 @@
+#include <math.h>
+int clk=10;
+unsigned long int state[8]={0,0,0,0,0,0,0,0};
+int prob= 50;
+byte rd[16];
+byte be[16];
+byte gn[16];
+int AO=292;
+//prob must be bigger than 2
+int rr[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int br[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int gr[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int s[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int q[16];
+  int w[16];
+  int e[16];
+  int yyy=0;
+  
+int f16time=1;
+int fallrmc=-1;
+int divsen=2;
+int tidi=4;
+int tidi2=12;
+int fallrmsen=7;
+boolean flip=0;
+int timedis=7;
+int timedi=5;
+int loopt=1;
+int rainr[16]={8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int raing[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int rainb[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int sen= 2;
+int runtime=10;
+int ssss=0;
+int timedrop=1;
+  int lat=9;
+  int data=8;
+  int r[16]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //////0
+int g[16]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //////1
+int b[16]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; ///////////2
+int rtime=10;
+int bumpa[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int top=0;
+void setup() {Serial.begin(9600);
+  pinMode(clk,OUTPUT);
+  pinMode(7,INPUT);
+ pinMode(lat,OUTPUT);
+ pinMode(data,OUTPUT);
+pinMode(A0,INPUT);
+randomSeed(13);
+}
+
+ boolean value[16][3];
+  
+void loop() {
+  
+ p16();
+  
+} 
+  
+  void demo()
+  {while (digitalRead(7)==1)
+  {
+    
+  }
+  Serial.println(digitalRead(7),DEC);
+  while (digitalRead(7)==0)
+  {stacking();
+  }
+  while (digitalRead(7)==1)
+  {
+    
+  }
+  delay(100);
+  while (digitalRead(7)==0)
+  {rainbow();
+  }
+ while (digitalRead(7)==1)
+  {
+    
+  }
+  delay(100);
+  while (digitalRead(7)==0)
+  {rainbow3();
+  }
+while (digitalRead(7)==1)
+  {
+    
+  }
+  delay(100);
+  while (digitalRead(7)==0)
+  {fallingo();
+  }
+  while (digitalRead(7)==1)
+  {
+    
+  }
+  delay(100);
+  while (digitalRead(7)==0)
+  {bump();
+  }
+  while (digitalRead(7)==1)
+  {
+    
+  }
+  delay(100);
+  while (digitalRead(7)==0)
+  {spreadm();
+  }
+ 
+
+  }
+ 
+
+ void rainbow()
+{
+  digitalWrite(lat,0);
+
+ 
+
+  
+int rainr=8;
+int raing=0;
+int rainb=0;
+for (int asd=0; asd<48; asd++)
+{ if (asd>=0 && asd<8)
+{raing=raing+1;
+}
+ if (asd>=8 && asd<16)
+{rainr=rainr-1;
+}
+if (asd>=16 && asd<24)
+{rainb=rainb+1;
+}
+if (asd>=24 && asd<32)
+{raing=raing-1;
+}
+if (asd>=32 && asd<40)
+{rainr=rainr+1;
+}  
+if (asd>=40 && asd<48)
+{rainb=rainb-1;
+}
+//////////////
+for (int i=0; i<16; i++)
+
+{
+  r[i]=rainr;
+  g[i]=raing;
+  b[i]=rainb;
+}
+for (int m=0; m<rtime; m++)
+{
+
+general();
+
+}
+}
+}
+
+
+
+
+
+
+
+
+
+
+ void off()
+ {digitalWrite(lat,0);
+
+  for (int g=0; g<16; g++)
+ { for (int z=0;z<3; z++)
+ {digitalWrite(clk,0);
+ 
+ digitalWrite(data,0);
+ 
+ digitalWrite(clk,1);
+
+ }
+ 
+ 
+ }
+ digitalWrite(lat,1);
+
+ digitalWrite(lat,0);
+ 
+ }
+
+  
+ 
+ 
+ 
+ 
+ 
+ void white()
+ {digitalWrite(lat,0);
+
+  for (int g=0; g<16; g++)
+ { for (int z=0;z<3; z++)
+ {digitalWrite(clk,0);
+ 
+ digitalWrite(data,1);
+ 
+ digitalWrite(clk,1);
+
+ }
+ 
+ 
+ }
+ digitalWrite(lat,1);
+
+ digitalWrite(lat,0);
+ 
+
+
+  
+ }
+ 
+ void load()
+{
+  digitalWrite(lat,0);
+
+  for (int g=0; g<16; g++)
+ { for (int z=0;z<3; z++)
+ {digitalWrite(clk,0);
+ 
+ digitalWrite(data,value[g][z]);
+ 
+ digitalWrite(clk,1);
+
+ }
+ 
+ 
+ }
+ digitalWrite(lat,1);
+
+ digitalWrite(lat,0);
+ 
+ }
+ void bump()
+ {ssss=(ssss+1)%timedrop;
+  if (ssss==0)
+  {top=top-1;
+  }
+ int aa=analogRead(A0);
+ int bb=analogRead(A0);
+ int cc=analogRead(A0);
+ int dd=aa;
+ if (dd<bb)
+ {dd=bb;}
+ if (dd<cc)
+ {dd=cc;}
+ int qry=abs(dd-AO);
+if (qry>7)
+{qry=qry-8;}
+else
+{qry=0;}
+ int v;
+ if (qry>sen)
+ {v=(qry-sen)/divsen;
+ }
+ else 
+ {v=0;
+ }
+ if (v>=top)
+ {if (v<15)
+ {top=v;
+ }
+ if (v>=15)
+ {top=15;
+ }
+ }
+ for (int ii=0; ii<16; ii++)
+ {r[ii]=0;
+ g[ii]=0;
+ b[ii]=0;
+}
+ r[0]=8;
+ g[0]=0;
+ b[0]=0;
+
+ if (v>=1 || top==1)
+ {r[1]=8;
+ g[1]=0;
+ b[1]=0;
+ }
+
+if (v>=2 || top==2)
+ {r[2]=8;
+ g[2]=1;
+ b[2]=0;
+ }
+ if (v>=3 || top==3)
+ {r[3]=8;
+ g[3]=1;
+ b[3]=0;
+ }
+ if (v>=4 || top==4)
+ {r[4]=8;
+ g[4]=5;
+ b[4]=0;
+ }
+ if (v>=5 || top==5)
+ {r[5]=8;
+ g[5]=5;
+ b[5]=0;
+ }
+ if (v>=6 || top==6)
+ {r[6]=0;
+ g[6]=8;
+ b[6]=0;
+ }
+ if (v>=7 || top==7)
+ {r[7]=0;
+ g[7]=8;
+ b[7]=0;
+ }
+if (v>=8 || top==8)
+ {r[8]=0;
+ g[8]=4;
+ b[8]=8;
+ }
+ if (v>=9 || top==9)
+ {r[9]=0;
+ g[9]=4;
+ b[9]=8;
+ }
+ if (v>=10 || top==10)
+ {r[10]=0;
+ g[10]=0;
+ b[10]=8;
+ }
+  if (v>=11 || top==11)
+ {r[11]=0;
+ g[11]=0;
+ b[11]=8;
+ }
+   if (v>=12 || top==12)
+ {r[12]=2;
+ g[12]=0;
+ b[12]=8;
+ }
+   if (v>=13 || top==13)
+ {r[13]=2;
+ g[13]=0;
+ b[13]=8;
+ }
+ if (v>=14 || top==14)
+ {r[14]=8;
+ g[14]=0;
+ b[14]=6;
+ }
+   if (v>=15 || top==15)
+ {r[15]=8;
+ g[15]=0;
+ b[15]=6;
+ }
+ for (int s=0;s<timedis; s++)
+ {
+  general();
+
+ }
+ 
+ 
+ }
+
+
+/*
+  void rainbow2()
+{
+  for (int rr=0; rr<11; rr++)
+  {for (int s=0;s<3; s++)
+{value[rr][s]=0;
+}
+  }
+  digitalWrite(lat,0);
+
+ 
+
+  
+for (int asd=0; asd<48; asd++)
+{ 
+  
+  if (asd>=0 && asd<8)
+{raing[0]=raing[0]+1;
+}
+ if (asd>=8 && asd<16)
+{rainr[0]=rainr[0]-1;
+}
+if (asd>=16 && asd<24)
+{rainb[0]=rainb[0]+1;
+}
+if (asd>=24 && asd<32)
+{raing[0]=raing[0]-1;
+}
+if (asd>=32 && asd<40)
+{rainr[0]=rainr[0]+1;
+}  
+if (asd>=40 && asd<48)
+{rainb[0]=rainb[0]-1;
+}
+//////////////
+for (int rbr=10; rbr>0; rbr--)
+  
+{rainr[rbr]=rainr[rbr-1];
+rainb[rbr]=rainb[rbr-1];
+raing[rbr]=raing[rbr-1];
+
+  }
+for (int m=0; m<rtime; m++)
+
+{
+  for (int j=0; j<8; j++)
+ 
+{
+ for (int et=0; et<11; et++)
+ {
+ for (int s=0;s<3; s++)
+{
+  
+  
+  value[et][s]=0;
+}
+ }
+ 
+ 
+  for (int ert=0; ert<11; ert++)
+{for (int c=1; c<=rainr[ert]; c++)
+{if (((1+(3*(c-1)))%8)==j)
+  
+{value[ert][0]=1;
+}
+}
+
+
+for (int c=1; c<=raing[ert]; c++)
+{if (((2+(3*(c-1)))%8)==j)
+  
+{value[ert][1]=1;
+}
+}
+
+
+for (int c=1; c<=rainb[ert]; c++)
+{if (((3+(3*(c-1)))%8)==j)
+  
+{value[ert][2]=1;
+}
+}
+}
+////////////
+load();
+
+}
+ }
+}
+}
+*/
+void randoml()
+{
+for (int c=0; c<11; c++)
+{for (int j=0; j<3;j++)
+  
+{int r1= random (0,2);
+  value[c][j]=r1;
+}
+}
+load();
+delay(50);
+}
+
+void general1()
+{
+  for (int j=0; j<8; j++)
+ 
+{
+ for (int et=0; et<16; et++)
+ {
+ for (int s=0;s<3; s++)
+{
+  
+  
+  value[et][s]=0;
+}
+ }
+ 
+ 
+  for (int ert=0; ert<16; ert++)
+{for (int c=1; c<=r[ert]; c++)
+{if (((1+(3*(c-1)))%8)==j)
+  
+{value[ert][0]=1;
+}
+
+}
+
+
+for (int c=1; c<=g[ert]; c++)
+{if (((2+(3*(c-1)))%8)==j)
+  
+{value[ert][1]=1;
+}
+}
+
+
+for (int c=1; c<=b[ert]; c++)
+{if (((3+(3*(c-1)))%8)==j)
+  
+{value[ert][2]=1;
+}
+}
+}
+////////////
+load();
+
+}
+}
+
+void general()
+{
+  for (int j=0; j<8; j++)
+ 
+{
+ for (int et=0; et<16; et++)
+ {
+ for (int s=0;s<3; s++)
+{
+  
+  
+  value[et][s]=0;
+}
+ }
+ 
+ 
+  for (int ert=0; ert<16; ert++)
+
+{if (r[ert]>j)
+  
+{value[ert][0]=1;
+}
+
+
+
+
+if (g[ert]>j)
+  
+{value[ert][1]=1;
+}
+
+
+if (b[ert]>j)
+  
+{value[ert][2]=1;
+}
+}
+
+////////////
+load();
+}
+}
+
+
+
+
+void red()
+{for (int m=0; m<11; m++)
+{r[m]=8;
+g[m]=0;
+b[m]=0;
+}
+for (int m=0; m<loopt; m++)
+{
+general();
+}
+}
+void orange()
+{r[0]=8;
+g[0]=1;
+b[0]=0;
+  for (int j=0; j<8; j++)
+ 
+{
+ 
+ for (int s=0;s<3; s++)
+{
+  
+  
+  value[0][s]=0;
+}
+ 
+ 
+ 
+  
+for (int c=1; c<=r[0]; c++)
+{if (((1+(3*(c-1)))%8)==j)
+  
+{value[0][0]=1;
+}
+}
+
+
+for (int c=1; c<=g[0]; c++)
+{if (((2+(3*(c-1)))%8)==j)
+  
+{value[0][1]=1;
+}
+}
+
+
+for (int c=1; c<=b[0]; c++)
+{if (((3+(3*(c-1)))%8)==j)
+  
+{value[0][2]=1;
+}
+}
+
+////////////
+digitalWrite(lat,0);
+
+   for (int z=0;z<3; z++)
+ {digitalWrite(clk,0);
+ 
+ digitalWrite(data,value[0][z]);
+ 
+ digitalWrite(clk,1);
+
+ }
+ 
+ 
+ 
+ digitalWrite(lat,1);
+
+ digitalWrite(lat,0);
+ 
+
+}
+
+}
+
+void yellow()
+{for (int m=0; m<11; m++)
+{r[m]=8;
+g[m]=4;
+b[m]=0;
+}
+for (int m=0; m<loopt; m++)
+{
+general();
+}
+}
+void green()
+{for (int m=0; m<11; m++)
+{r[m]=0;
+g[m]=8;
+b[m]=0;
+}
+for (int m=0; m<loopt; m++)
+{
+general();
+}
+}
+void blue()
+{for (int m=0; m<16; m++)
+{r[m]=0;
+g[m]=0;
+b[m]=8;
+}
+for (int m=0; m<loopt; m++)
+{
+general();
+}
+}
+void purple()
+{for (int m=0; m<11; m++)
+{r[m]=8;
+g[m]=0;
+b[m]=8;
+}
+for (int m=0; m<loopt; m++)
+{
+general();
+}
+}
+
+void rainbow3()
+{for (int m=0; m<6; m++)
+{r[m%6]=8;
+g[m%6]=0;
+b[m%6]=0;
+r[(1+m)%6]=8;
+g[(1+m)%6]=1;
+b[(1+m)%6]=0;
+r[(2+m)%6]=8;
+g[(2+m)%6]=4;
+b[(2+m)%6]=0;
+r[(3+m)%6]=0;
+g[(3+m)%6]=8;
+b[(3+m)%6]=0;
+r[(4+m)%6]=0;
+g[(4+m)%6]=0;
+b[(4+m)%6]=8;
+r[(5+m)%6]=8;
+g[(5+m)%6]=0;
+b[(5+m)%6]=8;
+r[6]=r[0];
+g[6]=g[0];
+b[6]=b[0];
+r[7]=r[1];
+g[7]=g[1];
+b[7]=b[1];
+r[8]=r[2];
+g[8]=g[2];
+b[8]=b[2];
+r[9]=r[3];
+g[9]=g[3];
+b[9]=b[3];
+r[11]=r[5];
+g[11]=g[5];
+b[11]=b[5];
+r[12]=r[6];
+g[12]=g[6];
+b[12]=b[6];
+r[13]=r[7];
+g[13]=g[7];
+b[13]=b[7];
+r[14]=r[8];
+g[14]=g[8];
+b[14]=b[8];
+r[15]=r[9];
+g[15]=g[9];
+b[15]=b[9];
+r[10]=r[4];
+g[10]=g[4];
+b[10]=b[4];
+for (int nm=0; nm<runtime; nm++)
+{general();
+}
+}
+}
+
+void fallingb()
+{
+  off();
+  if (ssss>0)
+  {
+r[16-ssss]=0;
+b[16-ssss]=0;
+g[16-ssss]=0;
+  }
+  else
+  { 
+r[0]=0;
+b[0]=0;
+g[0]=0;
+  }
+r[15-ssss]=0;
+b[15-ssss]=8;
+g[15-ssss]=0;
+
+
+for (int r=0; r<5; r++)
+{
+general();
+}
+
+if (ssss==15)
+{delay(1000);
+}
+off();
+if (ssss==15)
+{delay(1000);
+}
+ssss=(ssss+1)%16;
+
+}
+
+void stacking()
+{off();
+  
+for (int ry=0; ry<16; ry++)
+{int ran= random (0,7);
+  
+
+ for (int rqw=15; rqw>=ry; rqw--)
+{if (rqw<15)
+{r[rqw+1]=0;
+g[rqw+1]=0;
+b[rqw+1]=0;
+} 
+  if (ran == 0)
+{r[rqw]=8;
+g[rqw]=0;
+b[rqw]=0;
+}
+if (ran == 1)
+{r[rqw]=8;
+g[rqw]=1;
+b[rqw]=0;
+}
+if (ran == 2)
+{r[rqw]=8;
+g[rqw]=4;
+b[rqw]=0;
+}
+if (ran == 3)
+{r[rqw]=0;
+g[rqw]=8;
+b[rqw]=0;
+}
+if (ran == 4)
+{r[rqw]=0;
+g[rqw]=8;
+b[rqw]=8;
+}
+if (ran == 5)
+{r[rqw]=0;
+g[rqw]=0;
+b[rqw]=8;
+}
+if (ran == 6)
+{r[rqw]=8;
+g[rqw]=0;
+b[rqw]=8;
+}
+if (ry > 9)
+{
+ for (int rq=0; rq<5; rq++)
+{
+general();
+}
+}
+if (ry <= 9 && ry>4)
+{
+ for (int rq=0; rq<5; rq++)
+{
+general();
+}
+}
+if (ry <= 4)
+{
+ for (int rq=0; rq<5; rq++)
+{
+general();
+}
+}
+
+
+
+
+
+}
+}
+for (int reeq=0; reeq<16; reeq++)
+{
+for (int req=0; req<15; req++)
+{r[req]=r[req+1];
+g[req]=g[req+1];
+b[req]=b[req+1];
+}
+r[15]=0;
+g[15]=0;
+b[15]=0;
+if (reeq > 10)
+{
+ for (int rq=0; rq<7; rq++)
+{
+general();
+}
+}
+if (reeq <= 10 && reeq>5)
+{
+ for (int rq=0; rq<7; rq++)
+{
+general();
+}
+}
+if (reeq <= 5)
+{
+ for (int rq=0; rq<7; rq++)
+{
+general();
+}
+}
+}
+
+}
+void bounceob()
+{
+  
+  if (ssss>1)
+  {
+r[17-ssss]=0;
+b[17-ssss]=8;
+g[17-ssss]=0;
+  }
+  else
+  { 
+r[0]=0;
+b[0]=8;
+g[0]=0;
+  }
+  if (ssss!=0)
+{r[16-ssss]=8;
+b[16-ssss]=0;
+g[16-ssss]=1;
+}
+if (ssss!=16)
+{r[16-ssss-1]=8;
+b[16-ssss-1]=0;
+g[16-ssss-1]=1;
+}
+if (ssss!=16)
+{r[ssss]=8;
+b[ssss]=0;
+g[ssss]=1;
+}
+if (ssss!=0)
+{r[ssss-1]=8;
+b[ssss-1]=0;
+g[ssss-1]=1;
+}
+for (int r=0; r<1; r++)
+{
+general();
+}
+
+
+ssss=(ssss+1)%17;
+
+}
+
+void fallingo()
+{
+  
+  if (ssss>1)
+  {
+r[17-ssss]=0;
+b[17-ssss]=8;
+g[17-ssss]=0;
+  }
+  else
+  { 
+r[0]=0;
+b[0]=8;
+g[0]=0;
+  }
+  if (ssss>1)
+  {
+r[ssss-2]=0;
+b[ssss-2]=8;
+g[ssss-2]=0;
+  }
+  else
+  { 
+r[15]=0;
+b[15]=8;
+g[15]=0;
+  }
+  if (ssss!=0)
+{r[16-ssss]=8;
+b[16-ssss]=0;
+g[16-ssss]=1;
+}
+if (ssss!=16)
+{r[16-ssss-1]=8;
+b[16-ssss-1]=0;
+g[16-ssss-1]=1;
+}
+if (ssss!=16)
+{r[ssss]=8;
+b[ssss]=0;
+g[ssss]=1;
+}
+if (ssss!=0)
+{r[ssss-1]=8;
+b[ssss-1]=0;
+g[ssss-1]=1;
+}
+for (int r=0; r<6; r++)
+{
+general();
+}
+
+
+ssss=(ssss+1)%17;
+
+}
+
+void org()
+{
+  for (int re=0; re<16; re++)
+
+{r[re]=8;
+g[re]=1;
+b[re]=0;
+}
+general();
+
+
+}
+
+void streaks()
+{int rando= random(0,7);
+int sp = random(0,16);
+boolean dir= random(0,2);
+if (sp<16)
+{
+if (rando == 0)
+{r[sp]=8;
+g[sp]=0;
+b[sp]=0;
+}
+if (rando == 1)
+{r[sp]=8;
+g[sp]=1;
+b[sp]=0;
+}
+if (rando == 2)
+{r[sp]=8;
+g[sp]=4;
+b[sp]=0;
+}
+if (rando == 3)
+{r[sp]=0;
+g[sp]=8;
+b[sp]=0;
+}
+if (rando == 4)
+{r[sp]=0;
+g[sp]=8;
+b[sp]=8;
+}
+if (rando == 5)
+{r[sp]=0;
+g[sp]=0;
+b[sp]=8;
+}
+if (rando == 6)
+{r[sp]=8;
+g[sp]=0;
+b[sp]=8;
+}
+
+for (int r=0; r<1; r++)
+{
+general();
+}
+
+}
+}
+
+
+
+
+void spreadm()
+ {ssss=(ssss+1)%timedrop;
+  if (ssss==0)
+  {top=top-1;
+  }
+ 
+ int qry=abs(analogRead(A0)-AO);
+
+ int v;
+ if (qry>sen)
+ {v=(qry-sen)/2;
+ }
+ else 
+ {v=0;
+ }
+  
+ if (v>=top)
+ {if (v<15)
+ {top=v;
+ }
+ if (v>=15)
+ {top=15;
+ }
+ }
+ for (int ii=0; ii<8; ii++)
+ {r[ii]=8;
+ g[ii]=0;
+ b[ii]=0;
+}
+  if (top<9 && top>0)
+  {r[8-top]=8;
+ g[8-top]=2;
+ b[8-top]=0;
+  }
+  else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+  if (top<10 && top>1)
+ {r[9-top]=8;
+ g[9-top]=8;
+ b[9-top]=0;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+ if (top<11 && top>2)
+ {r[10-top]=1;
+ g[10-top]=8;
+ b[10-top]=0;
+ }
+else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+} 
+
+ if (top<12 && top>3)
+ {r[11-top]=0;
+ g[11-top]=4;
+ b[11-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+
+
+ if (top<13 && top>4)
+ {r[12-top]=0;
+ g[12-top]=0;
+ b[12-top]=8;
+ }
+else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<14 && top>5)
+ {r[13-top]=2;
+ g[13-top]=0;
+ b[13-top]=8;
+ }
+else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+
+ if (top<15 && top>6)
+ {r[14-top]=6;
+ g[14-top]=0;
+ b[14-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<16 && top>7)
+ {r[15-top]=6;
+ g[15-top]=0;
+ b[15-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<17 && top>8)
+ {r[16-top]=6;
+ g[16-top]=0;
+ b[16-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<18 && top>9)
+ {r[17-top]=6;
+ g[17-top]=0;
+ b[17-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<19 && top>10)
+ {r[18-top]=6;
+ g[18-top]=0;
+ b[18-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<20 && top>11)
+ {r[19-top]=6;
+ g[19-top]=0;
+ b[19-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+
+
+if (top<21 && top>12)
+ {r[20-top]=6;
+ g[20-top]=0;
+ b[20-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+
+if (top<22 && top>13)
+ {r[21-top]=6;
+ g[21-top]=0;
+ b[21-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+if (top<23 && top>14)
+ {r[22-top]=6;
+ g[22-top]=0;
+ b[22-top]=8;
+ }
+ else
+{flip=~flip;
+flip=~flip;
+flip=~flip;
+}
+
+
+
+
+
+for (int sa=0;sa<8; sa++)
+ {
+r[15-sa]=r[sa];
+g[15-sa]=g[sa];
+b[15-sa]=b[sa];
+ }
+ for (int s=0;s<timedi; s++)
+ {
+  general();
+
+ }
+ 
+ }
+ 
+ 
+void bumpwhite()
+ {ssss=(ssss+1)%timedrop;
+  if (ssss==0)
+  {top=top-1;
+  }
+ 
+ int qry=abs(analogRead(A0)-663);
+
+ int v;
+ if (qry>sen)
+ {v=(qry-sen)/1;
+ }
+ else 
+ {v=0;
+ }
+ if (v>=top)
+ {if (v<15)
+ {top=v;
+ }
+ if (v>=15)
+ {top=15;
+ }
+ }
+ for (int ii=0; ii<16; ii++)
+ {r[ii]=0;
+ g[ii]=0;
+ b[ii]=0;
+}
+ r[0]=8;
+ g[0]=0;
+ b[0]=0;
+
+ if (v>=1 || top==1)
+ {r[1]=8;
+ g[1]=0;
+ b[1]=0;
+ }
+
+if (v>=2 || top==2)
+ {r[2]=8;
+ g[2]=2;
+ b[2]=0;
+ }
+ if (v>=3 || top==3)
+ {r[3]=8;
+ g[3]=2;
+ b[3]=0;
+ }
+ if (v>=4 || top==4)
+ {r[4]=8;
+ g[4]=8;
+ b[4]=0;
+ }
+ if (v>=5 || top==5)
+ {r[5]=8;
+ g[5]=8;
+ b[5]=0;
+ }
+ if (v>=6 || top==6)
+ {r[6]=1;
+ g[6]=8;
+ b[6]=0;
+ }
+ if (v>=7 || top==7)
+ {r[7]=1;
+ g[7]=8;
+ b[7]=0;
+ }
+if (v>=8 || top==8)
+ {r[8]=0;
+ g[8]=4;
+ b[8]=8;
+ }
+ if (v>=9 || top==9)
+ {r[9]=0;
+ g[9]=4;
+ b[9]=8;
+ }
+ if (v>=10 || top==10)
+ {r[10]=0;
+ g[10]=0;
+ b[10]=8;
+ }
+  if (v>=11 || top==11)
+ {r[11]=0;
+ g[11]=0;
+ b[11]=8;
+ }
+   if (v>=12 || top==12)
+ {r[12]=2;
+ g[12]=0;
+ b[12]=8;
+ }
+   if (v>=13 || top==13)
+ {r[13]=2;
+ g[13]=0;
+ b[13]=8;
+ }
+ if (v>=14 || top==14)
+ {r[14]=8;
+ g[14]=0;
+ b[14]=6;
+ }
+   if (v>=15 || top==15)
+ {r[15]=8;
+ g[15]=0;
+ b[15]=6;
+ }
+ for (int s=0;s<3+timedis; s++)
+ {
+  
+  for (int j=0; j<8; j++)
+ 
+{
+ for (int et=0; et<16; et++)
+ {
+ for (int s=0;s<3; s++)
+{
+  
+  
+  value[et][s]=0;
+}
+ }
+ 
+ 
+  for (int ert=0; ert<16; ert++)
+
+{if (r[ert]>=j)
+  
+{value[ert][0]=1;
+}
+
+
+
+
+if (g[ert]>=j)
+  
+{value[ert][1]=1;
+}
+
+
+if (b[ert]>=j)
+  
+{value[ert][2]=1;
+}
+}
+
+////////////
+load();
+}
+}
+
+
+
+ }
+ 
+ 
+void fallm()
+ {
+
+
+   for (int ii=0; ii<15; ii++)
+ {r[ii]=r[ii+1];
+ g[ii]=g[ii+1];
+ b[ii]=b[ii+1];
+}
+
+
+ int qry=abs(analogRead(A0)-AO);
+
+ int v;
+ if (qry>sen)
+ {v=(qry-sen)/.5;
+ }
+ else 
+ {v=0;
+ }
+  v=v-1;
+v=v-(v%1);
+Serial.println(v, DEC);
+ if (v>=41)
+ {v=41;
+ }
+ if(v<=0)
+{r[15]=0; 
+g[15]=0; 
+b[15]=0;
+  }
+ if(v<8 && v>0)
+{r[15]=8; 
+g[15]=v; 
+b[15]=0;
+  }
+if(v<16 && v>7)
+{r[15]=16-v; 
+g[15]=8; 
+b[15]=0;
+  }
+if(v<24 && v>15)
+{ r[15]=0;
+g[15]=8;
+b[15]=v-16;
+  }
+ if(v<32 && v>23)
+{ r[15]=0;
+g[15]=32-v;
+b[15]=8;
+  }
+
+   if(v<40 && v>31)
+{ r[15]=v-32;
+g[15]=0;
+b[15]=8;
+  }
+if (v==41)
+{ r[15]=8;
+g[15]=0;
+b[15]=8;
+  }
+
+  for (int i=0; i<tidi; i++)
+  {
+ general();
+ }
+ }
+
+void fallrm()
+ {
+fallrmc=(fallrmc+1)%48;
+
+   for (int ii=0; ii<15; ii++)
+ {r[ii]=r[ii+1];
+ g[ii]=g[ii+1];
+ b[ii]=b[ii+1];
+}
+
+
+ int qry=abs(analogRead(A0)-AO)/2;
+ //Serial.println(analogRead(A0)-AO);
+Serial.println(qry);
+ int v= fallrmc%48;
+ if (qry>fallrmsen)
+ {v=v;
+ }
+ else 
+ {v=-1;
+ }
+ 
+ if(v==-1)
+{r[15]=0; 
+g[15]=0; 
+b[15]=0;
+  }
+ if(v==0)
+{r[15]=8; 
+g[15]=0; 
+b[15]=0;
+  }
+ if(v<8 && v>0)
+{r[15]=8; 
+g[15]=v; 
+b[15]=0;
+  }
+if(v<16 && v>7)
+{r[15]=16-v; 
+g[15]=8; 
+b[15]=0;
+  }
+if(v<24 && v>15)
+{ r[15]=0;
+g[15]=8;
+b[15]=v-16;
+  }
+ if(v<32 && v>23)
+{ r[15]=0;
+g[15]=32-v;
+b[15]=8;
+  }
+
+   if(v<40 && v>31)
+{ r[15]=v-32;
+g[15]=0;
+b[15]=8;
+  }
+ if(v<48 && v>39)
+{ r[15]=8;
+g[15]=0;
+b[15]=48-v;
+  }
+
+
+  for (int i=0; i<tidi; i++)
+  {
+ general();
+ }
+ }
+
+
+
+void fallr()
+ {
+fallrmc=fallrmc+1;
+
+   for (int ii=0; ii<15; ii++)
+ {r[ii]=r[ii+1];
+ g[ii]=g[ii+1];
+ b[ii]=b[ii+1];
+}
+
+
+int v=fallrmc%48;
+ if(v==0)
+{r[15]=8; 
+g[15]=0; 
+b[15]=0;
+  }
+ if(v<8 && v>0)
+{r[15]=8; 
+g[15]=v; 
+b[15]=0;
+  }
+if(v<16 && v>7)
+{r[15]=16-v; 
+g[15]=8; 
+b[15]=0;
+  }
+if(v<24 && v>15)
+{ r[15]=0;
+g[15]=8;
+b[15]=v-16;
+  }
+ if(v<32 && v>23)
+{ r[15]=0;
+g[15]=32-v;
+b[15]=8;
+  }
+
+   if(v<40 && v>31)
+{ r[15]=v-32;
+g[15]=0;
+b[15]=8;
+  }
+   if(v<48 && v>39)
+{ r[15]=8;
+g[15]=0;
+b[15]=48-v;
+  }
+
+
+  for (int i=0; i<tidi2; i++)
+  {
+ general();
+ }
+ }
+
+void fade16()
+{
+  yyy=0;
+ while (yyy<10*prob)
+ {for (int i=0; i<16; i++)
+
+{q[i]=random (0,prob);
+w[i]=random(0,prob);
+ e[i]=random(0,prob);
+if (q[i]==1)
+ { rr[i]=random(0,9);
+ }
+ if (w[i]==1)
+{  br[i]=random(0,9);
+}
+if (e[i]==1)
+{  
+  gr[i]=random(0,9);
+}
+
+  if (rr[i]<r[i])
+  {
+    r[i]=r[i]-1;
+   }
+   if (rr[i]>r[i])
+  {
+    r[i]=r[i]+1;
+   }
+   if (gr[i]<g[i])
+  {
+    g[i]=g[i]-1;
+   }
+   if (gr[i]>g[i])
+  {
+    g[i]=g[i]+1;
+   }
+   if (br[i]<b[i])
+  {
+    b[i]=b[i]-1;
+   }
+   if (br[i]>b[i])
+  {
+    b[i]=b[i]+1;
+   }
+}
+  
+ 
+for (int ii=0; ii<f16time; ii++)
+  {
+ general();
+ }
+ yyy++;
+ }
+}
+
+
+void ftc()
+{
+
+ 
+ fade16();
+ 
+  int a=random(0,9);
+  int c=random(0,9); 
+  int d=random(0,9);
+  int brk = 0;
+ while (brk==0)
+ {brk=1;
+  for (int i=0; i<16; i++)
+
+{q[i]=random (0,prob);
+w[i]=random(0,prob);
+ e[i]=random(0,prob);
+if (q[i]==1)
+ { rr[i]=a;
+ }
+ if (w[i]==1)
+{  br[i]=c;
+}
+if (e[i]==1)
+{  
+  gr[i]=d;
+}
+
+  if (rr[i]<r[i])
+  {
+    r[i]=r[i]-1;
+   }
+   if (rr[i]>r[i])
+  {
+    r[i]=r[i]+1;
+   }
+   if (gr[i]<g[i])
+  {
+    g[i]=g[i]-1;
+   }
+   if (gr[i]>g[i])
+  {
+    g[i]=g[i]+1;
+   }
+   if (br[i]<b[i])
+  {
+    b[i]=b[i]-1;
+   }
+   if (br[i]>b[i])
+  {
+    b[i]=b[i]+1;
+   }
+   if (r[i]!=a || g[i]!=d || b[i]!=c)
+   {
+    brk=0;
+   }
+}
+  
+ if (brk==1)
+{for (int ii=0; ii<(f16time+100); ii++)
+  {
+ general();
+ delay(5);
+ }
+}
+else{for (int ii=0; ii<f16time; ii++)
+  {
+ general();
+ }
+  
+  }
+ }
+  
+  }
+
+void general256()
+{
+  for (int qa=0; qa<8; qa++)
+  {
+ 
+  for (int ert=0; ert<16; ert++)
+
+{if (byte(pow(2,qa)) && rd[ert]==byte(pow(2,qa)))
+  
+{value[ert][0]=1;
+}
+
+
+
+
+if (byte(pow(2,qa)) && gn[ert]==byte(pow(2,qa)))
+  
+{value[ert][1]=1;
+}
+
+
+if (byte(pow(2,qa)) && be[ert]==byte(pow(2,qa)))
+  
+{value[ert][2]=1;
+}
+}
+
+////////////
+for (int eer=0; eer<pow(2,qa+1); eer++)
+{load(); 
+Serial.println(qa, DEC);
+}
+}
+
+}
+
+
+void redup()
+{
+for (byte xxx=00000000; xxx<=11111111; xxx++)
+
+for (int ii=0; ii<16; ii++)
+{
+  rd[ii]=xxx;
+  general256();
+  
+}
+
+}
+
+
+
+
+
+void half()
+{
+  for (int i=0; i<16; i++)
+  {r[i]=8;
+  b[i]=8;
+  g[i]=8;
+  
+  }
+  general();
+
+ for (int i=0; i<16; i++)
+  {r[i]=0;
+  b[i]=0;
+  g[i]=0;
+  
+  }
+  general();
+
+
+
+}
+
+
+
+
+void p16()
+{Serial.begin(9600);
+  for ( long int aaa=0; aaa<(24*56); aaa++)
+  {
+  
+  
+  state[0]=(state[0]+1);
+
+ for (int w=1; w<8; w++)
+{state[w]=int(state[0]*(49+w)/49);
+
+}
+
+  s[0]=state[0]%24;
+   s[1]=state[1]%24;
+   s[2]=state[2]%24;
+   s[3]=state[3]%24;
+   s[4]=state[4]%24;
+   
+   s[5]=state[5]%24;
+   s[6]=state[6]%24;
+   s[7]=state[7]%24;
+   s[8]=state[7]%24;
+   s[9]=state[6]%24;
+   s[10]=state[5]%24;
+   s[11]=state[4]%24;
+   s[12]=state[3]%24;
+   s[13]=state[2]%24;
+   s[14]=state[1]%24;
+   s[15]=state[0]%24;
+   reads();
+  
+
+  
+  for(int i=0; i<7; i++)
+{  general();
+  
+}
+  
+  }
+} 
+
+void reads()
+{
+  for (int i=0; i<16; i++)
+  {
+if (s[i]==0)
+  {r[i]=8;
+   g[i]=0;
+   b[i]=0;
+  }
+  else if (s[i]==1)
+  {r[i]=7;
+   g[i]=1;
+   b[i]=0;
+  } else if (s[i]==2)
+  {r[i]=6;
+   g[i]=2;
+   b[i]=0;
+  }
+  else if (s[i]==3)
+  {r[i]=5;
+   g[i]=3;
+   b[i]=0;
+  } else if (s[i]==4)
+  {r[i]=4;
+   g[i]=4;
+   b[i]=0;
+  }
+  else if (s[i]==5)
+  {r[i]=3;
+   g[i]=5;
+   b[i]=0;
+  } else if (s[i]==6)
+  {r[i]=2;
+   g[i]=6;
+   b[i]=0;
+  } else if (s[i]==7)
+  {r[i]=1;
+   g[i]=7;
+   b[i]=0;
+  }
+  else if (s[i]==8)
+  {r[i]=0;
+   g[i]=8;
+   b[i]=0;
+  } else if (s[i]==9)
+  {r[i]=0;
+   g[i]=7;
+   b[i]=1;
+  }
+  else if (s[i]==10)
+  {r[i]=0;
+   g[i]=6;
+   b[i]=2;
+  } else if (s[i]==11)
+  {r[i]=0;
+   g[i]=5;
+   b[i]=3;
+  } else if (s[i]==12)
+  {r[i]=0;
+   g[i]=4;
+   b[i]=4;
+  }
+  else if (s[i]==13)
+  {r[i]=0;
+   g[i]=3;
+   b[i]=5;
+  } else if (s[i]==14)
+  {r[i]=0;
+   g[i]=2;
+   b[i]=6;
+  }
+  else if (s[i]==15)
+  {r[i]=0;
+   g[i]=1;
+   b[i]=7;
+  } else if (s[i]==16)
+  {r[i]=0;
+   g[i]=0;
+   b[i]=8;
+  } else if (s[i]==17)
+  {r[i]=1;
+   g[i]=0;
+   b[i]=7;
+  }
+  else if (s[i]==18)
+  {r[i]=2;
+   g[i]=0;
+   b[i]=6;
+  } else if (s[i]==19)
+  {r[i]=3;
+   g[i]=0;
+   b[i]=5;
+  }
+  else if (s[i]==20)
+  {r[i]=4;
+   g[i]=0;
+   b[i]=4;
+  } else if (s[i]==21)
+  {r[i]=5;
+   g[i]=0;
+   b[i]=3;
+  } else if (s[i]==22)
+  {r[i]=6;
+   g[i]=0;
+   b[i]=2;
+  }
+  else if (s[i]==23)
+  {r[i]=7;
+   g[i]=0;
+   b[i]=1;
+  } 
+
+}
+}
