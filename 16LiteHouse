@@ -167,6 +167,7 @@ general();
 
 
 
+
  void off()
  {digitalWrite(lat,0);
 
@@ -213,6 +214,7 @@ general();
 
  digitalWrite(lat,0);
  
+
 
 
   
@@ -367,6 +369,9 @@ if (v>=8 || top==8)
  }
 
 
+
+
+
 /*
   void rainbow2()
 {
@@ -458,6 +463,10 @@ load();
 }
 }
 */
+
+
+
+
 void randoml()
 {
 for (int c=0; c<11; c++)
@@ -560,6 +569,10 @@ if (b[ert]>j)
 load();
 }
 }
+
+
+
+
 
 
 
@@ -1260,6 +1273,12 @@ b[15-sa]=b[sa];
  }
  
  
+ 
+ 
+ 
+ 
+ 
+ 
 void bumpwhite()
  {ssss=(ssss+1)%timedrop;
   if (ssss==0)
@@ -1417,6 +1436,12 @@ load();
  }
  
  
+ 
+ 
+ 
+ 
+ 
+ 
 void fallm()
  {
 
@@ -1485,6 +1510,11 @@ b[15]=8;
  general();
  }
  }
+
+
+
+
+
 
 void fallrm()
  {
@@ -1559,6 +1589,11 @@ b[15]=48-v;
 
 
 
+
+
+
+
+
 void fallr()
  {
 fallrmc=fallrmc+1;
@@ -1614,6 +1649,10 @@ b[15]=48-v;
  general();
  }
  }
+ 
+ 
+ 
+ 
 
 void fade16()
 {
@@ -1669,6 +1708,10 @@ for (int ii=0; ii<f16time; ii++)
  yyy++;
  }
 }
+
+
+
+
 
 
 void ftc()
@@ -1795,6 +1838,9 @@ for (int ii=0; ii<16; ii++)
 }
 
 }
+
+
+
 
 
 
